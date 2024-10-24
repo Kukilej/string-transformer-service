@@ -1,0 +1,11 @@
+app:
+  api:
+    title: "String Transformer Service API"
+    version: "1.0"
+    description: "API documentation for the String Transformer Service, which allows transformations of strings using various methods."
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
