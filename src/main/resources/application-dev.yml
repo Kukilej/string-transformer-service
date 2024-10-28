@@ -1,0 +1,5 @@
+logging:
+  level:
+    root: INFO
+    com.kuzminac.string_transformer_service: DEBUG
+    org.springframework: INFO

@@ -1,10 +1,16 @@
 package com.kuzminac.string_transformer_service.service;
 
+import javax.xml.transform.TransformerException;
 import java.util.Map;
 
 public interface StringTransformer {
 
-    boolean supports(String groupId, String transformerId);
-
+    /**
+     * Transforms the input string based on the provided parameters.
+     *
+     * @param input The input string to be transformed.
+     * @param parameters The parameters for the transformation process.
+     * @return The transformed string.
+     */
     String transform(String input, Map<String, String> parameters);
 }

@@ -1,10 +1,12 @@
 package com.kuzminac.string_transformer_service.controller;
 
+import com.kuzminac.string_transformer_service.exception.ErrorResponse;
 import com.kuzminac.string_transformer_service.model.TransformRequest;
 import com.kuzminac.string_transformer_service.model.TransformResponse;
 import com.kuzminac.string_transformer_service.service.TransformationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,7 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,16 +43,7 @@ public class TransformationController {
     public ResponseEntity<List<TransformResponse>> transformStrings(
             @Valid @RequestBody TransformRequest request) {
         log.info("Received transformation request with {} elements", request.elements().size());
-
-        try {
-            List<TransformResponse> response = transformationService.transformElements(request);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException ex) {
-            log.warn("Invalid transformation request: {}", ex.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (Exception ex) {
-            log.error("Error occurred during transformation: {}", ex.getMessage(), ex);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        List<TransformResponse> response = transformationService.transformElements(request);
+        return ResponseEntity.ok(response);
     }
 }

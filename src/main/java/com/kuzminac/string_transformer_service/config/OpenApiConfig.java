@@ -1,4 +1,4 @@
-package com.kuzminac.string_transformer_service.config.open_api;
+package com.kuzminac.string_transformer_service.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

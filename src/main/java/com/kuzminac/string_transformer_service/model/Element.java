@@ -6,7 +6,4 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record Element(
-        @NotBlank String value,
-        @NotEmpty @Valid List<TransformerConfig> transformers
-) {}
+public record Element(@NotBlank String value, @NotEmpty @Valid List<TransformerConfig> transformers) {}

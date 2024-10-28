@@ -1,4 +1,4 @@
-package com.kuzminac.string_transformer_service.annotation;
+package com.kuzminac.string_transformer_service.service;
 
 import org.springframework.stereotype.Component;
 import java.lang.annotation.ElementType;
@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Component
 public @interface TransformerType {
     String groupId();
     String transformerId();

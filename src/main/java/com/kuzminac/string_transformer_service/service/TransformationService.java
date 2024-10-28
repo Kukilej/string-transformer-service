@@ -1,72 +1,64 @@
 package com.kuzminac.string_transformer_service.service;
 
-import com.kuzminac.string_transformer_service.annotation.TransformerType;
+import com.kuzminac.string_transformer_service.exception.TransformationException;
+import com.kuzminac.string_transformer_service.exception.ValidationException;
 import com.kuzminac.string_transformer_service.model.Element;
 import com.kuzminac.string_transformer_service.model.TransformRequest;
 import com.kuzminac.string_transformer_service.model.TransformResponse;
 import com.kuzminac.string_transformer_service.model.TransformerConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TransformationService {
 
-    private final Map<String, StringTransformer> transformerRegistry = new HashMap<>();
+    private final TransformerRegistry transformerRegistry;
 
-    public TransformationService(List<StringTransformer> transformers) {
-        registerTransformers(transformers);
-    }
-
-    private void registerTransformers(List<StringTransformer> transformers) {
-        for (StringTransformer transformer : transformers) {
-            TransformerType annotation = transformer.getClass().getAnnotation(TransformerType.class);
-            if (annotation != null) {
-                String key = buildTransformerKey(annotation.groupId(), annotation.transformerId());
-                transformerRegistry.put(key, transformer);
-                log.info("Registered transformer: {}", key);
-            } else {
-                log.warn("Transformer {} does not have a TransformerType annotation", transformer.getClass().getName());
-            }
-        }
-    }
-
-
+    /**
+     * Transforms a list of elements based on the request.
+     *
+     * @param request The transformation request containing elements to transform.
+     * @return A list of transformation responses.
+     */
     public List<TransformResponse> transformElements(TransformRequest request) {
-        return request.elements().stream()
+        return request.elements().parallelStream()
                 .map(this::transformElement)
                 .collect(Collectors.toList());
     }
 
     private TransformResponse transformElement(Element element) {
-
         String originalValue = element.value();
         String transformedValue = originalValue;
 
         for (TransformerConfig config : element.transformers()) {
-            String key = buildTransformerKey(config.groupId(), config.transformerId());
-            StringTransformer transformer = transformerRegistry.get(key);
+            String groupId = config.groupId();
+            String transformerId = config.transformerId();
 
-            if (transformer != null) {
-                try {
-                    log.debug("Applying transformer [{}] with parameters: {}", key, config.parameters());
-                    transformedValue = transformer.transform(transformedValue, config.parameters());
-                } catch (Exception e) {
-                    log.error("Error applying transformer [{}]: {}", key, e.getMessage(), e);
-                    // Continue with the last successful transformation value
-                }
-            } else {
-                log.warn("Transformer not found: {}", key);
+            StringTransformer transformer = Optional.ofNullable(transformerRegistry.getTransformer(groupId, transformerId))
+                    .orElseThrow(() -> new ValidationException("Invalid transformer type: " + groupId + ":" + transformerId));
+
+            try {
+                log.debug("Applying transformer [{}:{}] with parameters: {}", groupId, transformerId, config.parameters());
+                transformedValue = transformer.transform(transformedValue, config.parameters());
+            } catch (ValidationException e) {
+                log.error("Validation error in transformer [{}:{}]: {}", groupId, transformerId, e.getMessage(), e);
+                throw e;
+            } catch (TransformationException e) {
+                log.error("Error during transformation [{}:{}]: {}", groupId, transformerId, e.getMessage(), e);
+                throw e;
+            } catch (Exception e) {
+                log.error("Unexpected error applying transformer [{}:{}]: {}", groupId, transformerId, e.getMessage(), e);
+                throw new TransformationException("Unexpected transformation error", e);
             }
         }
+
         return TransformResponse.of(originalValue, transformedValue);
-    }
-    private String buildTransformerKey(String groupId, String transformerId) {
-        return String.format("%s:%s", groupId, transformerId);
     }
 }

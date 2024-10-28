@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+server:
+  port: ${SERVER_PORT:8080}
+
+
+logging:
+  level:
+    root: WARN
+    com.kuzminac.string_transformer_service: INFO
+    org.springframework: WARN
+

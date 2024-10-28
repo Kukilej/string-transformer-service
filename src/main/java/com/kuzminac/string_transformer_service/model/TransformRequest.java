@@ -5,6 +5,4 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
-public record TransformRequest(
-        @NotEmpty @Valid List<Element> elements
-) {}
+public record TransformRequest(@NotEmpty @Valid List<Element> elements) {}
