@@ -9,21 +9,22 @@ String Transformer Service is a Spring Boot-based application that applies a ser
 - Provides built-in validation for inputs, including null checks and parameter validation.
 - Supports extensible transformer architecture through annotations.
 
-## Prerequisites
-- Java 17 or higher
-- Maven 3.8 or higher
+## Architecture
 
-## Getting Started
+The architecture consists of the following components:
+- **Spring Boot application**: Core backend service for string transformation.
+- **Prometheus**: Used for metrics scraping.
+- **Loki**: Used for log aggregation.
+- **Grafana**: Used for metrics and log visualization.
 
-### Running the Application
-1. Clone the repository:
-2. Navigate to the project directory
-3. Build with  mvn clean install
-4. Run with  mvn spring-boot:run
+### Run the application and monitoring stack using Docker Compose:
+
+docker-compose up -d
+
 
 
 ## API Endpoints
-### Transform Strings: POST /api/v1/transform
+### Transform Strings: POST localhost:8080/api/v1/transform
 
 ### Request Body:
 ```json
@@ -89,3 +90,15 @@ String Transformer Service is a Spring Boot-based application that applies a ser
 	}
 ]
 ```
+### Grafana Dashboard: http://localhost:3000 (no login required)
+
+![Loki logs](docs/images/Loki-logs.png)
+![Grafana Dashboard](docs/images/grafana dashboard.png)
+
+
+
+### Swagger docs http://localhost:8080/swagger-ui/index.html
+
+![Swagger](docs/images/swagger.png)
+
+
