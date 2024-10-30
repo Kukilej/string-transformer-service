@@ -1,19 +1,40 @@
 spring:
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}  # Default to 'dev' if not set
   application:
     name: string-transformer-service
 
 server:
   port: 8080
 
+
 logging:
+  loki:
+    url: ${LOKI_URL:http://localhost:3100}
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
   level:
     root: INFO
     com.kuzminac.string_transformer_service: INFO
     org.springframework: WARN
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, prometheus
+
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+  observations:
+    key-values:
+      application: string-transformer-service
+
 
 app:
   api:

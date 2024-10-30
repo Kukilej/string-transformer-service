@@ -34,7 +34,6 @@ class TransformationServiceTest {
     private TransformationService transformationService;
 
 
-
     @Test
     void transformElements_ShouldApplyTransformersSuccessfully() {
         // Arrange
@@ -114,108 +113,5 @@ class TransformationServiceTest {
 
         // Assert
         assertThat(responses).isEmpty();
-    }
-
-
-
-
-
-
-
-//    @Test
-//    void transformElements_ShouldApplyTransformersSuccessfully() {
-//        // Arrange
-//        TransformerConfig config1 = new TransformerConfig("group1", "id1", Map.of("key1", "value1"));
-//        TransformerConfig config2 = new TransformerConfig("group2", "id2", Map.of("key2", "value2"));
-//
-//        Element element = new Element("test", List.of(config1, config2));
-//        TransformRequest request = new TransformRequest(List.of(element));
-//
-//        // Mock transformation behavior
-//        when(mockTransformer1.supports("group1", "id1")).thenReturn(true);
-//        when(mockTransformer2.supports("group2", "id2")).thenReturn(true);
-//        when(mockTransformer1.transform("test", config1.parameters())).thenReturn("intermediate");
-//        when(mockTransformer2.transform("intermediate", config2.parameters())).thenReturn("final");
-//
-//        // Act
-//        List<TransformResponse> responses = transformationService.transformElements(request);
-//
-//        // Assert
-//        assertThat(responses).hasSize(1);
-//        assertThat(responses.get(0).originalValue()).isEqualTo("test");
-//        assertThat(responses.get(0).transformedValue()).isEqualTo("final");
-//
-//        verify(mockTransformer1).transform("test", config1.parameters());
-//        verify(mockTransformer2).transform("intermediate", config2.parameters());
-//    }
-//
-//    @Test
-//    void transformElements_ShouldHandleMissingTransformerGracefully() {
-//        // Arrange
-//        TransformerConfig config1 = new TransformerConfig("group1", "id1", Map.of("key1", "value1"));
-//        TransformerConfig config2 = new TransformerConfig("group3", "id3", Map.of("key3", "value3"));
-//
-//        Element element = new Element("test", List.of(config1, config2));
-//        TransformRequest request = new TransformRequest(List.of(element));
-//
-//        when(mockTransformer1.supports("group1", "id1")).thenReturn(true);
-//        when(mockTransformer1.transform("test", config1.parameters())).thenReturn("intermediate");
-//
-//        // Act
-//        List<TransformResponse> responses = transformationService.transformElements(request);
-//
-//        // Assert
-//        assertThat(responses).hasSize(1);
-//        assertThat(responses.get(0).originalValue()).isEqualTo("test");
-//        assertThat(responses.get(0).transformedValue()).isEqualTo("intermediate");
-//
-//        verify(mockTransformer1).transform("test", config1.parameters());
-//        verify(mockTransformer2, never()).transform(anyString(), anyMap());
-//    }
-//
-//    @Test
-//    void transformElements_ShouldHandleEmptyTransformersList() {
-//        // Arrange
-//        Element element = new Element("test", List.of());
-//        TransformRequest request = new TransformRequest(List.of(element));
-//
-//        // Act
-//        List<TransformResponse> responses = transformationService.transformElements(request);
-//
-//        // Assert
-//        assertThat(responses).hasSize(1);
-//        assertThat(responses.get(0).originalValue()).isEqualTo("test");
-//        assertThat(responses.get(0).transformedValue()).isEqualTo("test");
-//    }
-//
-//    @Test
-//    void transformElements_ShouldReturnEmptyResponseForEmptyRequest() {
-//        // Arrange
-//        TransformRequest request = new TransformRequest(List.of());
-//
-//        // Act
-//        List<TransformResponse> responses = transformationService.transformElements(request);
-//
-//        // Assert
-//        assertThat(responses).isEmpty();
-//    }
-
-    private TransformerType createTransformerType(String groupId, String transformerId) {
-        return new TransformerType() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return TransformerType.class;
-            }
-
-            @Override
-            public String groupId() {
-                return groupId;
-            }
-
-            @Override
-            public String transformerId() {
-                return transformerId;
-            }
-        };
     }
 }

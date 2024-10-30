@@ -1,0 +1,57 @@
+version: "4"
+services:
+  string-transformer-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: string-transformer-service:1.0.0
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      - LOKI_URL=http://loki:3100
+      - SERVER_PORT=8080
+
+    depends_on:
+      - loki
+      - prometheus
+      - grafana
+
+    networks:
+      - monitoring_network
+
+  loki:
+    image: grafana/loki:main
+    command: [ "-config.file=/etc/loki/local-config.yaml" ]
+    ports:
+      - "3100:3100"
+    networks:
+      - monitoring_network
+  prometheus:
+    image: prom/prometheus:v2.46.0
+    command:
+      - --enable-feature=exemplar-storage
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring_network
+
+  grafana:
+    image: grafana/grafana:10.1.0
+    volumes:
+      - ./docker/grafana:/etc/grafana/provisioning/datasources:ro
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring_network
+
+networks:
+  monitoring_network:
+    driver: bridge
