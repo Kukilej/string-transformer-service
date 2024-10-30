@@ -93,7 +93,7 @@ docker-compose up -d
 ### Grafana Dashboard: http://localhost:3000 (no login required)
 
 ![Loki logs](docs/images/Loki-logs.png)
-![Grafana Dashboard](docs/images/grafana dashboard.png)
+![Grafana Dashboard](docs/images/grafana.png)
 
 
 
