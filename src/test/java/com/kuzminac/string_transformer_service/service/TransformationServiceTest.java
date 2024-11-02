@@ -5,6 +5,8 @@ import com.kuzminac.string_transformer_service.model.Element;
 import com.kuzminac.string_transformer_service.model.TransformRequest;
 import com.kuzminac.string_transformer_service.model.TransformResponse;
 import com.kuzminac.string_transformer_service.model.TransformerConfig;
+import com.kuzminac.string_transformer_service.service.transformer.StringTransformer;
+import com.kuzminac.string_transformer_service.service.transformer.TransformerRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,7 +36,6 @@ class TransformationServiceTest {
     @InjectMocks
     private TransformationService transformationService;
 
-
     @Test
     void transformElements_ShouldApplyTransformersSuccessfully() {
         // Arrange
@@ -43,8 +45,8 @@ class TransformationServiceTest {
         Element element = new Element("test", List.of(config1, config2));
         TransformRequest request = new TransformRequest(List.of(element));
 
-        when(transformerRegistry.getTransformer("group1", "id1")).thenReturn(mockTransformer1);
-        when(transformerRegistry.getTransformer("group2", "id2")).thenReturn(mockTransformer2);
+        when(transformerRegistry.getTransformer("group1", "id1")).thenReturn(Optional.of(mockTransformer1));
+        when(transformerRegistry.getTransformer("group2", "id2")).thenReturn(Optional.of(mockTransformer2));
 
         when(mockTransformer1.transform("test", Map.of("key1", "value1"))).thenReturn("intermediate");
         when(mockTransformer2.transform("intermediate", Map.of("key2", "value2"))).thenReturn("final");
@@ -72,8 +74,8 @@ class TransformationServiceTest {
         Element element = new Element("test", List.of(config1, config2));
         TransformRequest request = new TransformRequest(List.of(element));
 
-        when(transformerRegistry.getTransformer("group1", "id1")).thenReturn(mockTransformer1);
-        when(transformerRegistry.getTransformer("group3", "id3")).thenReturn(null); // Transformer not found
+        when(transformerRegistry.getTransformer("group1", "id1")).thenReturn(Optional.of(mockTransformer1));
+        when(transformerRegistry.getTransformer("group3", "id3")).thenReturn(Optional.empty());
 
         // Act & Assert
         ValidationException exception = assertThrows(ValidationException.class, () -> {

@@ -1,4 +1,4 @@
-package com.kuzminac.string_transformer_service.service;
+package com.kuzminac.string_transformer_service.service.transformer;
 
 import org.springframework.stereotype.Component;
 import java.lang.annotation.ElementType;

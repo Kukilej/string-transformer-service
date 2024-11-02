@@ -1,6 +1,7 @@
 package com.kuzminac.string_transformer_service.service.impl;
 
 import com.kuzminac.string_transformer_service.exception.ValidationException;
+import com.kuzminac.string_transformer_service.service.transformer.impl.RegexReplacementTransformer;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -44,7 +45,11 @@ class RegexReplacementTransformerTest {
                 Arguments.of("test@email.com", "@.*", "@example.com", "test@example.com"),
                 Arguments.of("replace spaces", "\\s+", "-", "replace-spaces"),
                 Arguments.of("", "\\d+", "x", ""),
-                Arguments.of("12345", "\\d+", "num", "num")
+                Arguments.of("12345", "\\d+", "num", "num"),
+                Arguments.of("abc123def456", "\\d+", "#", "abc#def#"),
+                Arguments.of("Special *&^% characters", "[*&^%]+", "-", "Special - characters"),
+                Arguments.of("Multiple replacements 123 and 456", "\\d+", "num", "Multiple replacements num and num")
+
         );
     }
 

@@ -1,9 +1,9 @@
-package com.kuzminac.string_transformer_service.service.impl;
+package com.kuzminac.string_transformer_service.service.transformer.impl;
 
-import com.kuzminac.string_transformer_service.service.TransformerType;
+import com.kuzminac.string_transformer_service.service.transformer.TransformerType;
 import com.kuzminac.string_transformer_service.exception.TransformationException;
 import com.kuzminac.string_transformer_service.exception.ValidationException;
-import com.kuzminac.string_transformer_service.service.StringTransformer;
+import com.kuzminac.string_transformer_service.service.transformer.StringTransformer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

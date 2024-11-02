@@ -1,9 +1,9 @@
-package com.kuzminac.string_transformer_service.service.impl;
+package com.kuzminac.string_transformer_service.service.transformer.impl;
 
 import com.ibm.icu.text.Transliterator;
-import com.kuzminac.string_transformer_service.service.TransformerType;
+import com.kuzminac.string_transformer_service.service.transformer.TransformerType;
 import com.kuzminac.string_transformer_service.exception.TransformationException;
-import com.kuzminac.string_transformer_service.service.StringTransformer;
+import com.kuzminac.string_transformer_service.service.transformer.StringTransformer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +20,8 @@ public class ScriptConverterTransformer implements StringTransformer {
 
     @Override
     public String transform(String input, Map<String, String> parameters) {
-        if (input == null || input.isEmpty()) {
-            log.debug("Input is null or empty, skipping script conversion");
+        if (input == null || input.isBlank()) {
+            log.debug("Input is null or blank, skipping script conversion");
             return input;
         }
 

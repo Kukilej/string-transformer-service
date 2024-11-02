@@ -1,4 +1,4 @@
-package com.kuzminac.string_transformer_service.service;
+package com.kuzminac.string_transformer_service.service.transformer;
 
 import javax.xml.transform.TransformerException;
 import java.util.Map;

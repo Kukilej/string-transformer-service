@@ -6,12 +6,13 @@ import com.kuzminac.string_transformer_service.model.Element;
 import com.kuzminac.string_transformer_service.model.TransformRequest;
 import com.kuzminac.string_transformer_service.model.TransformResponse;
 import com.kuzminac.string_transformer_service.model.TransformerConfig;
+import com.kuzminac.string_transformer_service.service.transformer.StringTransformer;
+import com.kuzminac.string_transformer_service.service.transformer.TransformerRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,7 +29,7 @@ public class TransformationService {
      * @return A list of transformation responses.
      */
     public List<TransformResponse> transformElements(TransformRequest request) {
-        return request.elements().parallelStream()
+        return request.elements().stream()
                 .map(this::transformElement)
                 .collect(Collectors.toList());
     }
@@ -41,7 +42,7 @@ public class TransformationService {
             String groupId = config.groupId();
             String transformerId = config.transformerId();
 
-            StringTransformer transformer = Optional.ofNullable(transformerRegistry.getTransformer(groupId, transformerId))
+            StringTransformer transformer = transformerRegistry.getTransformer(groupId, transformerId)
                     .orElseThrow(() -> new ValidationException("Invalid transformer type: " + groupId + ":" + transformerId));
 
             try {

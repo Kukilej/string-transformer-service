@@ -1,5 +1,6 @@
 package com.kuzminac.string_transformer_service.service.impl;
 
+import com.kuzminac.string_transformer_service.service.transformer.impl.ScriptConverterTransformer;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,8 +37,8 @@ class ScriptConverterTransformerTest {
                 Arguments.of("Пример", "Primer"),
                 Arguments.of("αβγ", "abg"),
                 Arguments.of("éçà", "eca"),
-                Arguments.of(null, null),
-                Arguments.of("", "")
+                Arguments.of(null, null),  // Assuming transformer handles null gracefully
+                Arguments.of("", "")         // Empty input should return empty string
         );
     }
 

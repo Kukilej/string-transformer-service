@@ -1,5 +1,6 @@
 package com.kuzminac.string_transformer_service.service.impl;
 
+import com.kuzminac.string_transformer_service.service.transformer.impl.RegexRemovalTransformer;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -17,8 +18,6 @@ class RegexRemovalTransformerTest {
 
     @InjectMocks
     private RegexRemovalTransformer transformer;
-
-
 
     @ParameterizedTest
     @MethodSource("provideTransformTestCases")
@@ -39,7 +38,11 @@ class RegexRemovalTransformerTest {
                 Arguments.of("test@email.com", "@.*", "test"),
                 Arguments.of("no-matches-here", "xyz", "no-matches-here"),
                 Arguments.of("", "\\d+", ""),
-                Arguments.of("12345", "\\d+", "")
+                Arguments.of("12345", "\\d+", ""),
+                Arguments.of("abc123def456", "\\d+", "abcdef"),
+                Arguments.of("Special *&^% characters", "[*&^%]", "Special  characters"),
+                Arguments.of("EntireStringMatch", "EntireStringMatch", "")
+
         );
     }
 }
