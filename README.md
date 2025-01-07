@@ -22,60 +22,62 @@ The architecture consists of the following components:
 docker-compose up -d
 
 
-
 ## API Endpoints
-### Transform Strings: POST localhost:8080/api/v1/transform
 
-### Request Body:
-```json
-{
-   "elements": [
+```bash
+curl -X POST http://localhost:8080/api/v1/transform \
+  -H "Content-Type: application/json" \
+  -d '{
+    "elements": [
       {
-         "value": "Sample123Text",
-         "transformers": [
-            {
-               "groupId": "regex",
-               "transformerId": "remove",
-               "parameters": {
-                  "pattern": "\\d+"
-               }
-            },
-            {
-               "groupId": "regex",
-               "transformerId": "replace",
-               "parameters": {
-                  "pattern": "Text",
-                  "replacement": "String"
-               }
-            },
-            {
-               "groupId": "script",
-               "transformerId": "convert",
-               "parameters": {}
+        "value": "Sample123Text",
+        "transformers": [
+          {
+            "groupId": "regex",
+            "transformerId": "remove",
+            "parameters": {
+              "pattern": "\d+"
             }
-         ]
+          },
+          {
+            "groupId": "regex",
+            "transformerId": "replace",
+            "parameters": {
+              "pattern": "Text",
+              "replacement": "String"
+            }
+          },
+          {
+            "groupId": "script",
+            "transformerId": "convert",
+            "parameters": {}
+          }
+        ]
       },
       {
-         "value": "Пример456Текстα",
-         "transformers": [
-            {
-               "groupId": "regex",
-               "transformerId": "remove",
-               "parameters": {
-                  "pattern": "\\d+"
-               }
-            },
-            {
-               "groupId": "script",
-               "transformerId": "convert",
-               "parameters": {}
+        "value": "Пример456Текстα",
+        "transformers": [
+          {
+            "groupId": "regex",
+            "transformerId": "remove",
+            "parameters": {
+              "pattern": "\d+"
             }
-         ]
+          },
+          {
+            "groupId": "script",
+            "transformerId": "convert",
+            "parameters": {}
+          }
+        ]
       }
-   ]
-}
-
+    ]
+  }' | jq
 ```
+
+
+
+
 ### Response:
 
 ```json

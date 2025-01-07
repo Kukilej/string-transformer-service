@@ -1,9 +1,10 @@
 package com.kuzminac.string_transformer_service.service.transformer;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,38 +16,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public final class TransformerRegistry {
 
-    private final ApplicationContext applicationContext;
     private final Map<TransformerKey, StringTransformer> registry = new ConcurrentHashMap<>();
 
-    /**
-     * Constructs a new TransformerRegistry with the provided ApplicationContext.
-     *
-     * @param applicationContext the application context for retrieving beans
-     */
-    public TransformerRegistry(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        registerTransformers();
-    }
-
-    /**
-     * Registers all beans annotated with @TransformerType in the application context.
-     */
-    private void registerTransformers() {
-        Map<String, Object> transformerBeans = applicationContext.getBeansWithAnnotation(TransformerType.class);
-        for (Object bean : transformerBeans.values()) {
-            if (bean instanceof StringTransformer transformer) {
-                TransformerType annotation = transformer.getClass().getAnnotation(TransformerType.class);
+    @Autowired
+    public TransformerRegistry(List<StringTransformer> allTransformers) {
+        for (StringTransformer transformer : allTransformers) {
+            TransformerType annotation = transformer.getClass().getAnnotation(TransformerType.class);
+            if (annotation != null) {
                 TransformerKey key = new TransformerKey(annotation.groupId(), annotation.transformerId());
-
-                if (registry.containsKey(key)) {
-                    log.warn("Duplicate transformer registration attempted for key: {}", key);
-                    continue;
-                }
                 registry.put(key, transformer);
-                log.info("Registered transformer: {}", key);
             }
         }
     }
+
 
     /**
      * Retrieves a transformer from the registry by groupId and transformerId.
